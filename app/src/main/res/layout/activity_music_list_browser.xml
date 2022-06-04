@@ -24,8 +24,8 @@
                 android:contentDescription="@string/des_back"
                 android:onClick="finishSelf"
                 android:scaleType="centerInside"
-                android:tint="@color/colorIconTint"
-                app:srcCompat="@drawable/ic_back" />
+                app:srcCompat="@drawable/ic_back"
+                app:tint="@color/colorIconTint" />
 
             <TextView
                 android:layout_width="0dp"
@@ -63,7 +63,12 @@
         android:id="@+id/rvMusicListBrowser"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        app:fastScrollEnabled="true"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
