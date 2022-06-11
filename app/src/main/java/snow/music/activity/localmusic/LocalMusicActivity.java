@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
 import snow.music.R;
 import snow.music.activity.ListActivity;
+import snow.music.activity.browser.folder.FolderBrowserActivity;
 import snow.music.activity.search.SearchActivity;
 import snow.music.dialog.MessageDialog;
 import snow.music.dialog.ScannerDialog;
@@ -67,6 +69,9 @@ public class LocalMusicActivity extends ListActivity {
             mMusicListFragment.showSortDialog();
         } else if (id == R.id.btnScan) {
             scanMusic();
+        } else if (id == R.id.btnFolder) {
+            Intent intent = new Intent(this, FolderBrowserActivity.class);
+            this.startActivity(intent);
         }
     }
 
@@ -94,4 +99,6 @@ public class LocalMusicActivity extends ListActivity {
 
         messageDialog.show(getSupportFragmentManager(), "messageScanMusic");
     }
+
+
 }

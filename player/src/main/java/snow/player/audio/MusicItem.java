@@ -28,6 +28,7 @@ public final class MusicItem implements Parcelable {
     private String album;
     private String uri;
     private String iconUri;
+    private String folder;
     private int duration;
     private boolean forbidSeek;
     @Nullable
@@ -48,6 +49,7 @@ public final class MusicItem implements Parcelable {
         this.album = "";
         this.uri = "";
         this.iconUri = "";
+        this.folder = "";
         this.duration = 0;
         this.extra = null;
         this.forbidSeek = false;
@@ -68,6 +70,7 @@ public final class MusicItem implements Parcelable {
         album = source.album;
         uri = source.uri;
         iconUri = source.iconUri;
+        folder = source.folder;
         duration = source.duration;
         forbidSeek = source.forbidSeek;
         autoDuration = source.autoDuration;
@@ -197,6 +200,26 @@ public final class MusicItem implements Parcelable {
     }
 
     /**
+     * 获取歌曲所在文件夹（NonNull）。
+     *
+     * @return 歌曲所在文件夹（NonNull）
+     */
+    @NonNull
+    public String getFolder() {
+        return folder;
+    }
+
+    /**
+     * 设置歌曲所在文件夹（NonNull）。
+     *
+     * @param folder 要设置的图标 Uri（NonNull）
+     */
+    public void setFolder(@NonNull String folder) {
+        Preconditions.checkNotNull(folder);
+        this.folder = folder;
+    }
+
+    /**
      * 获取歌曲的持续时间。
      *
      * @return 歌曲的持续时间
@@ -300,6 +323,7 @@ public final class MusicItem implements Parcelable {
                 Objects.equal(album, other.album) &&
                 Objects.equal(uri, other.uri) &&
                 Objects.equal(iconUri, other.iconUri) &&
+                Objects.equal(folder, other.folder) &&
                 Objects.equal(duration, other.duration) &&
                 Objects.equal(forbidSeek, other.forbidSeek) &&
                 Objects.equal(autoDuration, other.autoDuration);
@@ -316,6 +340,7 @@ public final class MusicItem implements Parcelable {
                 album,
                 uri,
                 iconUri,
+                folder,
                 duration,
                 forbidSeek,
                 autoDuration);
@@ -330,6 +355,7 @@ public final class MusicItem implements Parcelable {
                 ", album='" + album + '\'' +
                 ", uri='" + uri + '\'' +
                 ", iconUri='" + iconUri + '\'' +
+                ", folder='" + folder + '\'' +
                 ", duration=" + duration +
                 ", forbidSeek=" + forbidSeek +
                 ", autoDuration=" + autoDuration +
@@ -349,6 +375,7 @@ public final class MusicItem implements Parcelable {
         dest.writeString(this.album);
         dest.writeString(this.uri);
         dest.writeString(this.iconUri);
+        dest.writeString(this.folder);
         dest.writeInt(this.duration);
         dest.writeByte((byte) (this.forbidSeek ? 1 : 0));
         dest.writeParcelable(extra, 0);
@@ -368,6 +395,7 @@ public final class MusicItem implements Parcelable {
         this.album = in.readString();
         this.uri = in.readString();
         this.iconUri = in.readString();
+        this.folder = in.readString();
         this.duration = in.readInt();
         this.forbidSeek = in.readByte() == 1;
         this.extra = in.readParcelable(Thread.currentThread().getContextClassLoader());
@@ -417,6 +445,7 @@ public final class MusicItem implements Parcelable {
         private String album = "";
         private String uri;
         private String iconUri = "";
+        private String folder = "";
         private int duration;
         private boolean forbidSeek = false;
         private Bundle extra;
@@ -499,6 +528,17 @@ public final class MusicItem implements Parcelable {
         }
 
         /**
+         * 设置歌曲所在文件夹（NonNull）。
+         *
+         * @param folder 要设置的 文件夹（NonNull）
+         */
+        public Builder setFolder(@NonNull String folder) {
+            Preconditions.checkNotNull(folder);
+            this.folder = folder;
+            return this;
+        }
+
+        /**
          * 设置歌曲的持续时间（播放时长）。
          *
          * @param duration 歌曲的持续时间，小于 0 时，duration 的值将被设置为 0
@@ -571,6 +611,7 @@ public final class MusicItem implements Parcelable {
             musicItem.setAlbum(album);
             musicItem.setUri(uri);
             musicItem.setIconUri(iconUri);
+            musicItem.setFolder(folder);
             musicItem.setDuration(duration);
             musicItem.setForbidSeek(forbidSeek);
             musicItem.setExtra(extra);

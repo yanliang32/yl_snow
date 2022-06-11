@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -227,7 +226,7 @@ public class ScannerDialog extends BottomDialog {
         mDelayDismissDisposable = Observable.timer(800, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    FragmentActivity activity = Objects.requireNonNull(getActivity());
+                    FragmentActivity activity = requireActivity();
                     dismiss();
                     if (mScannerViewModel.isStarted()) {
                         showScanResultDialog(activity, mScannerViewModel.getScannedMusic());
@@ -257,7 +256,7 @@ public class ScannerDialog extends BottomDialog {
     }
 
     private boolean havePermission() {
-        int result = ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -424,7 +423,8 @@ public class ScannerDialog extends BottomDialog {
                     optimizeText(getAudioArtist(cursor), snow.player.R.string.snow_music_item_unknown_artist),
                     optimizeText(getAudioAlbum(cursor), snow.player.R.string.snow_music_item_unknown_album),
                     getAudioUri(cursor).toString(),
-                    "",
+                    getAudioUri(cursor).toString(),
+                    getFolder(cursor),
                     getDuration(cursor),
                     getDateModified(cursor));
         }
@@ -432,6 +432,11 @@ public class ScannerDialog extends BottomDialog {
         private String getFileName(Cursor cursor) {
             String displayName = getDisplayName(cursor);
             return displayName.substring(0, displayName.lastIndexOf("."));
+        }
+
+        private String getFolder(Cursor cursor){
+            String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+            return path.substring(0,path.lastIndexOf("/"));
         }
 
         public String optimizeText(String text, int stringId) {
@@ -442,4 +447,6 @@ public class ScannerDialog extends BottomDialog {
             return text;
         }
     }
+
+
 }

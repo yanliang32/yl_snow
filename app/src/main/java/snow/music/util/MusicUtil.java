@@ -39,6 +39,7 @@ public final class MusicUtil {
                 musicItem.getAlbum(),
                 musicItem.getUri(),
                 musicItem.getIconUri(),
+                musicItem.getFolder(),
                 musicItem.getDuration(),
                 getAddTime(musicItem)
         );

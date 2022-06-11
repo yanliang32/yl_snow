@@ -76,4 +76,7 @@ dependencies {
 
     // pinyin-comparator
     implementation 'com.github.jrfeng:pinyin-comparator:1.0.3'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.alibaba:fastjson:1.2.78'
 }

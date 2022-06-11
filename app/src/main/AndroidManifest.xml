@@ -71,6 +71,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".activity.browser.folder.FolderBrowserActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.history.HistoryActivity"
             android:screenOrientation="portrait" />
 
@@ -84,6 +88,10 @@
 
         <activity
             android:name=".activity.detail.album.AlbumDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.detail.folder.FolderDetailActivity"
             android:screenOrientation="portrait" />
 
         <activity

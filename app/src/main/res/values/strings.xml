@@ -31,11 +31,18 @@
     <string name="title_albums">Albums</string>
     <string name="empty_no_albums">No albums</string>
 
+    <!-- FolderBrowserActivity -->
+    <string name="title_folder">Folder</string>
+    <string name="empty_no_folder">No folder</string>
+
     <!-- ArtistDetailActivity -->
     <string name="title_artist_prefix">Artist: </string>
 
     <!-- AlbumDetailActivity -->
     <string name="title_album_prefix">Album: </string>
+
+    <!-- FolderDetailActivity -->
+    <string name="title_folder_prefix">Folder: </string>
 
     <!-- SearchActivity -->
     <string name="hint_input_music_name">Please input music name</string>
@@ -175,6 +182,7 @@
     <string name="des_remove_music">Playlist is empty</string>
     <string name="des_back">Back</string>
     <string name="des_sort_music_list">Sort music list</string>
+    <string name="des_folder_music_list">文件夹列表</string>
     <string name="des_scan_local_music">Scan local music</string>
     <string name="des_menu_icon">menu icon</string>
     <string name="des_checked">checked</string>

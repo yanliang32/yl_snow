@@ -19,16 +19,18 @@ public class Music {
     @Unique
     private String uri;
     private String iconUri;
+    private String folder;
     private int duration;
     private long addTime;
 
-    public Music(long id, String title, String artist, String album, String uri, String iconUri, int duration, long addTime) {
+    public Music(long id, String title, String artist, String album, String uri, String iconUri,String folder, int duration, long addTime) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.uri = uri;
         this.iconUri = iconUri;
+        this.folder = folder;
         this.duration = duration;
         this.addTime = addTime;
     }
@@ -77,6 +79,14 @@ public class Music {
         this.iconUri = iconUri;
     }
 
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
+
     public int getDuration() {
         return duration;
     }
@@ -105,12 +115,13 @@ public class Music {
                 Objects.equal(artist, music.artist) &&
                 Objects.equal(album, music.album) &&
                 Objects.equal(uri, music.uri) &&
-                Objects.equal(iconUri, music.iconUri);
+                Objects.equal(iconUri, music.iconUri) &&
+                Objects.equal(folder, music.folder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, title, artist, album, uri, iconUri, duration, addTime);
+        return Objects.hashCode(id, title, artist, album, uri, iconUri,folder, duration, addTime);
     }
 
     @NonNull
@@ -123,6 +134,7 @@ public class Music {
                 ", album='" + album + '\'' +
                 ", uri='" + uri + '\'' +
                 ", iconUri='" + iconUri + '\'' +
+                ", folder='" + folder + '\'' +
                 ", duration=" + duration +
                 ", addTime=" + addTime +
                 '}';

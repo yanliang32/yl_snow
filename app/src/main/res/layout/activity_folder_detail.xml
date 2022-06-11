@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="snow.music.activity.localmusic.LocalMusicActivity">
+    tools:context="snow.music.activity.detail.folder.FolderDetailActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,11 +28,13 @@
                 app:tint="@color/colorIconTint" />
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/title_local_music"
-                android:textSize="@dimen/action_bar_title_text_size" />
+                android:singleLine="true"
+                android:textSize="12sp"
+                tools:text="@string/app_name" />
 
             <ImageButton
                 android:id="@+id/btnSearch"
@@ -40,43 +42,10 @@
                 android:layout_height="@dimen/image_button_size"
                 android:background="@drawable/bg_button_48dp"
                 android:contentDescription="@string/des_search"
-                android:onClick="onOptionMenuClicked"
+                android:onClick="searchMusic"
                 android:scaleType="centerInside"
                 android:tint="@color/colorIconTint"
                 app:srcCompat="@drawable/ic_action_search" />
-
-            <ImageButton
-                android:id="@+id/btnSort"
-                android:layout_width="@dimen/image_button_size"
-                android:layout_height="@dimen/image_button_size"
-                android:background="@drawable/bg_button_48dp"
-                android:contentDescription="@string/des_sort_music_list"
-                android:onClick="onOptionMenuClicked"
-                android:scaleType="centerInside"
-                android:tint="@color/colorIconTint"
-                app:srcCompat="@drawable/ic_action_sort" />
-
-            <ImageButton
-                android:id="@+id/btnFolder"
-                android:layout_width="@dimen/image_button_size"
-                android:layout_height="@dimen/image_button_size"
-                android:background="@drawable/bg_button_48dp"
-                android:contentDescription="@string/des_folder_music_list"
-                android:onClick="onOptionMenuClicked"
-                android:scaleType="centerInside"
-                android:tint="@color/colorIconTint"
-                app:srcCompat="@drawable/ic_action_folder" />
-
-            <ImageButton
-                android:id="@+id/btnScan"
-                android:layout_width="@dimen/image_button_size"
-                android:layout_height="@dimen/image_button_size"
-                android:background="@drawable/bg_button_48dp"
-                android:contentDescription="@string/des_scan_local_music"
-                android:onClick="onOptionMenuClicked"
-                android:scaleType="centerInside"
-                android:tint="@color/colorIconTint"
-                app:srcCompat="@drawable/ic_action_scan" />
 
             <Space
                 android:layout_width="8dp"

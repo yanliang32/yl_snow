@@ -64,7 +64,7 @@ public class BottomBarFragment extends Fragment {
                         return;
                     }
 
-                    loadMusicIcon(musicItem.getUri());
+                    loadMusicIcon(musicItem.getIconUri());
                 });
 
         mMinSlideDistance = DimenUtil.getDimenPx(getResources(), R.dimen.min_slide_distance);

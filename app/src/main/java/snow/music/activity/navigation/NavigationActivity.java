@@ -79,7 +79,7 @@ public class NavigationActivity extends BaseActivity {
                         return;
                     }
 
-                    loadMusicIcon(musicItem.getUri());
+                    loadMusicIcon(musicItem.getIconUri());
                 });
     }
 

@@ -936,6 +936,19 @@ public class MusicStore {
     }
 
     /**
+     * 获取所有的音频路径。
+     */
+    @NonNull
+    public synchronized List<String> getAllFolder() {
+        checkThread();
+        return new ArrayList<>(Arrays.asList(mMusicBox.query()
+                .build()
+                .property(Music_.folder)
+                .distinct()
+                .findStrings()));
+    }
+
+    /**
      * 获取指定歌手的全部音乐。
      *
      * @param artist 歌手名，不能为 null
@@ -981,6 +994,23 @@ public class MusicStore {
 
         return mMusicBox.query()
                 .equal(Music_.album, album, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build()
+                .find();
+    }
+
+    /**
+     * 获取指定文件夹的全部音乐。
+     *
+     * @param folder 专辑名，不能为 null
+     * @return 专辑中的全部音乐，不为 null
+     */
+    @NonNull
+    public synchronized List<Music> getFolderAllMusic(@NonNull String folder) {
+        Preconditions.checkNotNull(folder);
+        checkThread();
+
+        return mMusicBox.query()
+                .equal(Music_.folder, folder, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .find();
     }

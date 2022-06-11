@@ -98,7 +98,7 @@ public class PlayerActivity extends BaseActivity {
                         return;
                     }
 
-                    mRequestManager.load(musicItem.getUri())
+                    mRequestManager.load(musicItem.getIconUri())
                             .error(R.mipmap.ic_player_album_default_icon_big)
                             .placeholder(R.mipmap.ic_player_album_default_icon_big)
                             .transform(new CenterCrop(), new CircleCrop())
