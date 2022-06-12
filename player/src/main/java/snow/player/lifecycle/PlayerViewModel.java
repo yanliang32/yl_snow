@@ -37,6 +37,7 @@ public class PlayerViewModel extends ViewModel {
     private MutableLiveData<String> mTitle;
     private MutableLiveData<String> mArtist;
     private MutableLiveData<String> mAlbum;
+    private MutableLiveData<String> mFolder;
     private MutableLiveData<String> mIconUri;
     private MutableLiveData<Integer> mDuration;             // 单位：秒
     private MutableLiveData<Integer> mPlayProgress;         // 单位：秒
@@ -73,6 +74,7 @@ public class PlayerViewModel extends ViewModel {
     private String mDefaultTitle;
     private String mDefaultArtist;
     private String mDefaultAlbum;
+    private String mDefaultFolder;
 
     private ProgressClock mProgressClock;
     private ProgressClock mSleepTimerProgressClock;
@@ -117,6 +119,7 @@ public class PlayerViewModel extends ViewModel {
                 context.getString(R.string.snow_music_item_unknown_title),
                 context.getString(R.string.snow_music_item_unknown_artist),
                 context.getString(R.string.snow_music_item_unknown_album),
+                context.getString(R.string.snow_music_item_unknown_folder),
                 enableProgressClock);
     }
 
@@ -129,17 +132,20 @@ public class PlayerViewModel extends ViewModel {
      * @param defaultTitle  默认标题，会在正在播放的歌曲的标题为空时展示，不能为 null。
      * @param defaultArtist 默认艺术家，会在正在播放的歌曲的艺术家为空时展示，不能为 null。
      * @param defaultAlbum  默认专辑，会在正在播放的歌曲的专辑为空时展示，不能为 null。
+     * @param defaultFolder  默认文件夹，会在正在播放的歌曲的文件夹为空时展示，不能为 null。
      */
     public void init(@NonNull PlayerClient playerClient,
                      @NonNull String defaultTitle,
                      @NonNull String defaultArtist,
-                     @NonNull String defaultAlbum) {
+                     @NonNull String defaultAlbum,
+                     @NonNull String defaultFolder) {
         Preconditions.checkNotNull(playerClient);
         Preconditions.checkNotNull(defaultTitle);
         Preconditions.checkNotNull(defaultArtist);
         Preconditions.checkNotNull(defaultAlbum);
+        Preconditions.checkNotNull(defaultFolder);
 
-        init(playerClient, defaultTitle, defaultArtist, defaultAlbum, true);
+        init(playerClient, defaultTitle, defaultArtist, defaultAlbum,defaultFolder, true);
     }
 
     /**
@@ -149,6 +155,7 @@ public class PlayerViewModel extends ViewModel {
      * @param defaultTitle        默认标题，会在正在播放的歌曲的标题为空时展示，不能为 null。
      * @param defaultArtist       默认艺术家，会在正在播放的歌曲的艺术家为空时展示，不能为 null。
      * @param defaultAlbum        默认专辑，会在正在播放的歌曲的专辑为空时展示，不能为 null。
+     * @param defaultFolder       默认文件夹，会在正在播放的歌曲的专辑为空时展示，不能为 null。
      * @param enableProgressClock 是否启用进度条时钟。用于实时更新播放进度，默认为 true。
      *                            如果你不需要展示实时播放进度，则可以将该参数设置为 false。
      */
@@ -156,11 +163,13 @@ public class PlayerViewModel extends ViewModel {
                      @NonNull String defaultTitle,
                      @NonNull String defaultArtist,
                      @NonNull String defaultAlbum,
+                     @NonNull String defaultFolder,
                      boolean enableProgressClock) {
         Preconditions.checkNotNull(playerClient);
         Preconditions.checkNotNull(defaultTitle);
         Preconditions.checkNotNull(defaultArtist);
         Preconditions.checkNotNull(defaultAlbum);
+        Preconditions.checkNotNull(defaultFolder);
 
         if (mInitialized) {
             throw new IllegalArgumentException("PlayerViewModel is initialized, please do not repeat initialization.");
@@ -174,6 +183,7 @@ public class PlayerViewModel extends ViewModel {
         mDefaultTitle = defaultTitle;
         mDefaultArtist = defaultArtist;
         mDefaultAlbum = defaultAlbum;
+        mDefaultFolder = defaultFolder;
 
         initAllLiveData();
         initAllListener();
@@ -215,6 +225,7 @@ public class PlayerViewModel extends ViewModel {
                     mTitle.setValue(mDefaultTitle);
                     mArtist.setValue(mDefaultArtist);
                     mAlbum.setValue(mDefaultAlbum);
+                    mFolder.setValue(mDefaultFolder);
                     mIconUri.setValue("");
                     mDuration.setValue(0);
                     mPlayProgress.setValue(0);
@@ -224,6 +235,7 @@ public class PlayerViewModel extends ViewModel {
                 mTitle.setValue(MusicItemUtil.getTitle(musicItem, mDefaultTitle));
                 mArtist.setValue(MusicItemUtil.getArtist(musicItem, mDefaultArtist));
                 mAlbum.setValue(MusicItemUtil.getAlbum(musicItem, mDefaultAlbum));
+                mFolder.setValue(MusicItemUtil.getFolder(musicItem, mDefaultFolder));
 
                 mIconUri.setValue(musicItem.getIconUri());
 
@@ -541,6 +553,20 @@ public class PlayerViewModel extends ViewModel {
         }
 
         return mAlbum;
+    }
+
+    /**
+     * 正在播放的歌曲所属的文件夹。
+     *
+     * @throws IllegalStateException 如果当前 {@link PlayerViewModel} 对象还没有被初始化（{@link #isInitialized()} 返回 false）。
+     */
+    @NonNull
+    public LiveData<String> getFolder() throws IllegalStateException {
+        if (!isInitialized()) {
+            throw new IllegalStateException("PlayerViewModel not initialized yet.");
+        }
+
+        return mFolder;
     }
 
     /**
@@ -1174,6 +1200,7 @@ public class PlayerViewModel extends ViewModel {
         mTitle = new MutableLiveData<>(mDefaultTitle);
         mArtist = new MutableLiveData<>(mDefaultArtist);
         mAlbum = new MutableLiveData<>(mDefaultAlbum);
+        mFolder = new MutableLiveData<>(mDefaultFolder);
         mIconUri = new MutableLiveData<>(getIconUri(mPlayerClient));
         mDuration = new MutableLiveData<>(getDurationSec());
         mPlayProgress = new MutableLiveData<>(getPlayProgressSec());

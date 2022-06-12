@@ -459,6 +459,7 @@ public final class MusicItem implements Parcelable {
             this.title = context.getString(R.string.snow_music_item_unknown_title);
             this.artist = context.getString(R.string.snow_music_item_unknown_artist);
             this.album = context.getString(R.string.snow_music_item_unknown_album);
+            this.folder = context.getString(R.string.snow_music_item_unknown_folder);
         }
 
         /**

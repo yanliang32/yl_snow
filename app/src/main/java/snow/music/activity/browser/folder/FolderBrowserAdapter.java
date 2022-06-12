@@ -21,19 +21,19 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
     private static final int TYPE_EMPTY = 1;
     private static final int TYPE_ITEM = 2;
 
-    private List<String> mAllAlbum;
+    private List<String> mAllFolder;
     private final ItemClickHelper mItemClickHelper;
     private final SelectableHelper mSelectableHelper;
 
-    public FolderBrowserAdapter(@NonNull List<String> allAlbum) {
-        Preconditions.checkNotNull(allAlbum);
-        mAllAlbum = new ArrayList<>(allAlbum);
+    public FolderBrowserAdapter(@NonNull List<String> allFolder) {
+        Preconditions.checkNotNull(allFolder);
+        mAllFolder = new ArrayList<>(allFolder);
         mItemClickHelper = new ItemClickHelper();
         mSelectableHelper = new SelectableHelper(this);
     }
 
-    public void setAllAlbum(List<String> allAlbum) {
-        mAllAlbum = new ArrayList<>(allAlbum);
+    public void setAllFolder(List<String> allFolder) {
+        mAllFolder = new ArrayList<>(allFolder);
         notifyDataSetChanged();
     }
 
@@ -71,11 +71,11 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = R.layout.item_album_browser;
+        int layoutId = R.layout.item_folder_browser;
         boolean empty = viewType == TYPE_EMPTY;
 
         if (empty) {
-            layoutId = R.layout.empty_album_browser;
+            layoutId = R.layout.empty_folder_browser;
         }
 
         View itemView = LayoutInflater.from(parent.getContext())
@@ -90,8 +90,8 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
             return;
         }
 
-        String album = mAllAlbum.get(position);
-        holder.tvAlbum.setText(album.substring(album.lastIndexOf("/")+1));
+        String folder = mAllFolder.get(position);
+        holder.tvFolder.setText(folder.substring(folder.lastIndexOf("/")+1));
 
         mItemClickHelper.bindClickListener(holder.itemView);
         mSelectableHelper.updateSelectState(holder, position);
@@ -99,16 +99,16 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
 
     @Override
     public int getItemCount() {
-        if (mAllAlbum.isEmpty()) {
+        if (mAllFolder.isEmpty()) {
             return 1;
         }
 
-        return mAllAlbum.size();
+        return mAllFolder.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mAllAlbum.isEmpty()) {
+        if (mAllFolder.isEmpty()) {
             return TYPE_EMPTY;
         }
 
@@ -118,7 +118,7 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
     public static class ViewHolder extends RecyclerView.ViewHolder
             implements SelectableHelper.Selectable {
         public final boolean empty;
-        public TextView tvAlbum;
+        public TextView tvFolder;
         public View mark;
 
         public ViewHolder(@NonNull View itemView, boolean empty) {
@@ -129,7 +129,7 @@ public class FolderBrowserAdapter extends RecyclerView.Adapter<FolderBrowserAdap
                 return;
             }
 
-            tvAlbum = itemView.findViewById(R.id.tvAlbum);
+            tvFolder = itemView.findViewById(R.id.tvFolder);
             mark = itemView.findViewById(R.id.mark);
         }
 

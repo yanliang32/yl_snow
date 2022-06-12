@@ -21,6 +21,7 @@ public class MusicUtilTest {
                 "TestAlbum",
                 "https://www.test.com/test.mp3",
                 "https://www.test.com/test.png",
+                "",
                 60_000,
                 System.currentTimeMillis());
 

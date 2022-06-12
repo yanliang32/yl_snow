@@ -53,6 +53,7 @@ public final class MusicUtil {
                 .setTitle(music.getTitle())
                 .setArtist(music.getArtist())
                 .setAlbum(music.getAlbum())
+                .setFolder(music.getFolder())
                 .setUri(music.getUri())
                 .setIconUri(music.getIconUri())
                 .setDuration(music.getDuration())

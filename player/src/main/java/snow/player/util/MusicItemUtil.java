@@ -15,7 +15,7 @@ import snow.player.R;
 import snow.player.audio.MusicItem;
 
 /**
- * 用于帮助获取 {@link MusicItem} 的 title, artist, album 值。
+ * 用于帮助获取 {@link MusicItem} 的 title, artist, album,folder 值。
  */
 public final class MusicItemUtil {
     private MusicItemUtil() {
@@ -53,6 +53,16 @@ public final class MusicItemUtil {
     }
 
     /**
+     * 获取歌曲的文件夹，如果文件夹为空，则返回默认值。
+     */
+    public static String getFolder(@NonNull MusicItem musicItem, @NonNull String defaultFolder) {
+        Preconditions.checkNotNull(musicItem);
+        Preconditions.checkNotNull(defaultFolder);
+
+        return getStringOrDefault(musicItem.getFolder(), defaultFolder);
+    }
+
+    /**
      * 获取歌曲的标题，如果标题为空，则返回字符串 {@code "未知标题"}。
      */
     public static String getTitle(@NonNull Context context, @NonNull MusicItem musicItem) {
@@ -71,6 +81,13 @@ public final class MusicItemUtil {
      */
     public static String getAlbum(@NonNull Context context, @NonNull MusicItem musicItem) {
         return getAlbum(musicItem, context.getString(R.string.snow_music_item_unknown_album));
+    }
+
+    /**
+     * 获取歌曲的文件夹，如果文件夹为空，则返回字符串 {@code "未知专辑"}。
+     */
+    public static String getFolder(@NonNull Context context, @NonNull MusicItem musicItem) {
+        return getFolder(musicItem, context.getString(R.string.snow_music_item_unknown_folder));
     }
 
     // value 参数为空时返回 defaultValue 参数

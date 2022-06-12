@@ -17,45 +17,45 @@ import pinyin.util.PinyinComparator;
 import snow.music.store.MusicStore;
 
 public class FolderBrowserViewModel extends ViewModel {
-    private final MutableLiveData<List<String>> mAllAlbum;
-    private Disposable mLoadAllAlbumDisposable;
+    private final MutableLiveData<List<String>> mAllFolder;
+    private Disposable mLoadAllFolderDisposable;
 
     public FolderBrowserViewModel() {
-        mAllAlbum = new MutableLiveData<>(Collections.emptyList());
-        loadAllAlbum();
+        mAllFolder = new MutableLiveData<>(Collections.emptyList());
+        loadAllFolder();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
 
-        if (mLoadAllAlbumDisposable != null && !mLoadAllAlbumDisposable.isDisposed()) {
-            mLoadAllAlbumDisposable.dispose();
+        if (mLoadAllFolderDisposable != null && !mLoadAllFolderDisposable.isDisposed()) {
+            mLoadAllFolderDisposable.dispose();
         }
     }
 
-    public LiveData<List<String>> getAllAlbum() {
-        return mAllAlbum;
+    public LiveData<List<String>> getAllFolder() {
+        return mAllFolder;
     }
 
-    public String getAlbum(int position) {
-        return Objects.requireNonNull(mAllAlbum.getValue()).get(position);
+    public String getFolder(int position) {
+        return Objects.requireNonNull(mAllFolder.getValue()).get(position);
     }
 
-    private void loadAllAlbum() {
-        mLoadAllAlbumDisposable = Single.create((SingleOnSubscribe<List<String>>) emitter -> {
-            List<String> allAlbum = MusicStore.getInstance()
+    private void loadAllFolder() {
+        mLoadAllFolderDisposable = Single.create((SingleOnSubscribe<List<String>>) emitter -> {
+            List<String> allFolder = MusicStore.getInstance()
                     .getAllFolder();
 
-            Collections.sort(allAlbum, new PinyinComparator());
+            Collections.sort(allFolder, new PinyinComparator());
 
             if (emitter.isDisposed()) {
                 return;
             }
 
-            emitter.onSuccess(allAlbum);
+            emitter.onSuccess(allFolder);
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mAllAlbum::setValue);
+                .subscribe(mAllFolder::setValue);
     }
 }

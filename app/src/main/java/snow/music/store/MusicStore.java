@@ -1031,6 +1031,22 @@ public class MusicStore {
                 .find(offset, limit);
     }
 
+    /**
+     * 获取指定文件夹在给定的 offset 偏移量和 limit 限制间的全部音乐。
+     *
+     * @param folder 文件名，不能为 null
+     * @return 在给定的 offset 偏移量和 limit 限制间的全部音乐，不为 null
+     */
+    public synchronized List<Music> getFolderAllMusic(@NonNull String folder, long offset, long limit) {
+        Preconditions.checkNotNull(folder);
+        checkThread();
+
+        return mMusicBox.query()
+                .equal(Music_.folder, folder, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build()
+                .find(offset, limit);
+    }
+
     @NonNull
     private synchronized MusicList getBuiltInMusicList(String name) {
         if (!isBuiltInName(name)) {
@@ -1145,6 +1161,32 @@ public class MusicStore {
 
         return mMusicBox.query()
                 .equal(Music_.album, albumName, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .and()
+                .contains(Music_.title, key, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build()
+                .find();
+    }
+
+    /**
+     * 在文件名为 {@code folderName} 的所有歌曲中查找与指定 {@code key} 匹配的 {@link Music} 对象。
+     * <p>
+     * 只要歌曲名包含给定的 {@code key}，则就算匹配成功。
+     *
+     * @param folderName 文件名，不能为 null
+     * @param key       搜索关键字，不能为 null
+     * @return 查找结果，不为 null
+     */
+    @NonNull
+    public List<Music> findFolderMusic(@NonNull String folderName, @NonNull String key) {
+        Preconditions.checkNotNull(folderName);
+        Preconditions.checkNotNull(key);
+
+        if (folderName.isEmpty() || key.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return mMusicBox.query()
+                .equal(Music_.folder, folderName, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .and()
                 .contains(Music_.title, key, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()

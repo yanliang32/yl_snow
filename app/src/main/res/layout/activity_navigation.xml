@@ -78,7 +78,7 @@
                 android:layout_width="@dimen/navigation_album_icon_size"
                 android:layout_height="@dimen/navigation_album_icon_size"
                 android:contentDescription="@string/des_album_icon"
-                android:onClick="@{navViewModel.navigateToPlayer}"
+                android:onClick="@{navViewModel::navigateToPlayer}"
                 android:src="@mipmap/ic_album_default_icon_big" />
 
             <Space
