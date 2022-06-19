@@ -56,7 +56,11 @@ public class SettingActivity extends AppCompatActivity {
     private TextView soundEffectFile;
     private SwitchCompat swSurroundSound;
     private SwitchCompat swsoundField;
+    private TextView soundFieldCount;
     private SeekBar sbSoundField;
+    private SwitchCompat swDifference;
+    private TextView differenceCount;
+    private SeekBar sbDifference;
 
     private View itemPlayWithOtherApp;
     private SwitchCompat swPlayWithOtherApp;
@@ -134,7 +138,11 @@ public class SettingActivity extends AppCompatActivity {
         soundEffectFile = findViewById(R.id.soundEffectFile);
         swSurroundSound = findViewById(R.id.swSurroundSound);
         swsoundField = findViewById(R.id.swsoundField);
+        soundFieldCount = findViewById(R.id.soundFieldCount);
         sbSoundField = findViewById(R.id.seekBarSoundField);
+        swDifference = findViewById(R.id.swdifference);
+        differenceCount = findViewById(R.id.differenceCount);
+        sbDifference = findViewById(R.id.seekBarDifference);
 
         itemPlayWithOtherApp = findViewById(R.id.itemPlayWithOtherApp);
         swPlayWithOtherApp = findViewById(R.id.swPlayWithOtherApp);
@@ -260,7 +268,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //主要是用于监听进度值的改变
-
+                soundFieldCount.setText(progress+"");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -270,6 +278,30 @@ public class SettingActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //监听用户结束拖动进度条的时候
                 Toast.makeText(getApplicationContext(), "设置声场："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        swDifference.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getApplicationContext(), "启用差分", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "关闭差分", Toast.LENGTH_SHORT).show();
+            }
+        });
+        sbDifference.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //主要是用于监听进度值的改变
+                differenceCount.setText(progress+"");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //监听用户开始拖动进度条的时候
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //监听用户结束拖动进度条的时候
+                Toast.makeText(getApplicationContext(), "设置差分："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
             }
         });
 
