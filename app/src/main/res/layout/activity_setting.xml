@@ -176,6 +176,16 @@
                     android:text="启用音效"
                     android:textSize="15sp" />
 
+                <TextView
+                    android:id="@+id/soundEffectFile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:singleLine="true"
+                    android:text="《推荐》"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15sp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/swSoundEffects"
                     android:layout_width="wrap_content"
@@ -238,10 +248,11 @@
             </LinearLayout>
 
             <SeekBar
-                android:id="@+id/seekBar3"
+                android:id="@+id/seekBarSoundField"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
                 android:max="10"
                 android:progress="3" />
 

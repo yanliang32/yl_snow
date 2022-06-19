@@ -6,17 +6,23 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +32,7 @@ import java.util.Objects;
 import snow.music.R;
 import snow.music.dialog.MessageDialog;
 import snow.music.service.AppPlayerService;
+import snow.music.service.JMusicPlayer;
 import snow.music.util.CheckGroup;
 import snow.music.util.NightModeUtil;
 import snow.music.util.PlayerUtil;
@@ -46,8 +53,10 @@ public class SettingActivity extends AppCompatActivity {
 
     private View itemSoundEffects;
     private SwitchCompat swSoundEffects;
+    private TextView soundEffectFile;
     private SwitchCompat swSurroundSound;
     private SwitchCompat swsoundField;
+    private SeekBar sbSoundField;
 
     private View itemPlayWithOtherApp;
     private SwitchCompat swPlayWithOtherApp;
@@ -88,14 +97,16 @@ public class SettingActivity extends AppCompatActivity {
                         }
                         //文件中的内容
                         String content = eq.toString();
-                        Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+                        String a = JMusicPlayer.getFileFromContentUri(getBaseContext(),uri);
+                        soundEffectFile.setText("《"+a.substring(a.lastIndexOf("/")+1,a.lastIndexOf("."))+"》");
+                        Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "未选择音效文件", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "未选择音效文件", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -120,8 +131,10 @@ public class SettingActivity extends AppCompatActivity {
 
         itemSoundEffects = findViewById(R.id.itemSoundEffects);
         swSoundEffects = findViewById(R.id.swSoundEffects);
+        soundEffectFile = findViewById(R.id.soundEffectFile);
         swSurroundSound = findViewById(R.id.swSurroundSound);
         swsoundField = findViewById(R.id.swsoundField);
+        sbSoundField = findViewById(R.id.seekBarSoundField);
 
         itemPlayWithOtherApp = findViewById(R.id.itemPlayWithOtherApp);
         swPlayWithOtherApp = findViewById(R.id.swPlayWithOtherApp);
@@ -203,25 +216,69 @@ public class SettingActivity extends AppCompatActivity {
             switch (checkedItemId) {
                 case 44100:
                     mSettingViewModel.setSampleRate("44100");
+                    Toast.makeText(getApplicationContext(), "44100", Toast.LENGTH_SHORT).show();
                     break;
                 case 48000:
                     mSettingViewModel.setSampleRate("48000");
+                    Toast.makeText(getApplicationContext(), "48000", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
         });
 
-        itemSoundEffects.setOnClickListener(v -> swSoundEffects.toggle());
+        itemSoundEffects.setOnClickListener(v -> {
+            swSoundEffects.toggle();
+            swSurroundSound.toggle();
+            swsoundField.toggle();
+        });
         swSoundEffects.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");//筛选器
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intentActivityResultLauncher.launch(intent);
-                return;
+                Toast.makeText(getApplicationContext(), "启用音效", Toast.LENGTH_SHORT).show();
             }
+            else {
+                Toast.makeText(getApplicationContext(), "关闭音效", Toast.LENGTH_SHORT).show();
+            }
+        });
+        swSurroundSound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getApplicationContext(), "启用王者环绕", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "关闭王者环绕", Toast.LENGTH_SHORT).show();
+            }
+        });
+        swsoundField.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getApplicationContext(), "启用声场", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "关闭声场", Toast.LENGTH_SHORT).show();
+            }
+        });
+        sbSoundField.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //主要是用于监听进度值的改变
+
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //监听用户开始拖动进度条的时候
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //监听用户结束拖动进度条的时候
+                Toast.makeText(getApplicationContext(), "设置声场："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        soundEffectFile.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");//筛选器
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intentActivityResultLauncher.launch(intent);
+            return;
         });
 
         itemPlayWithOtherApp.setOnClickListener(v -> swPlayWithOtherApp.toggle());
