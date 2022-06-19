@@ -13,6 +13,7 @@ import snow.player.lifecycle.PlayerViewModel;
 
 public class SettingViewModel extends AndroidViewModel {
     private MutableLiveData<NightModeUtil.Mode> mNightMode;
+    private MutableLiveData<String> sampleRate;
     private MutableLiveData<Boolean> mPlayWithOtherApp;
 
     private PlayerViewModel mPlayerViewModel;
@@ -21,6 +22,7 @@ public class SettingViewModel extends AndroidViewModel {
     public SettingViewModel(Application application) {
         super(application);
 
+        sampleRate = new MutableLiveData<>("44100");
         mNightMode = new MutableLiveData<>(NightModeUtil.getNightMode(application));
         mPlayWithOtherApp = new MutableLiveData<>(false);
     }
@@ -43,6 +45,11 @@ public class SettingViewModel extends AndroidViewModel {
     }
 
     @NonNull
+    public LiveData<String> getSampleRate() {
+        return sampleRate;
+    }
+
+    @NonNull
     public LiveData<Boolean> getPlayWithOtherApp() {
         return mPlayWithOtherApp;
     }
@@ -56,6 +63,16 @@ public class SettingViewModel extends AndroidViewModel {
 
         mNightMode.setValue(mode);
         NightModeUtil.setDefaultNightMode(getApplication(), mode);
+    }
+
+    public void setSampleRate(@NonNull String rate) {
+        Preconditions.checkNotNull(rate);
+
+        if (rate == sampleRate.getValue()) {
+            return;
+        }
+
+        sampleRate.setValue(rate);
     }
 
     public void setPlayWithOtherApp(boolean playWithOtherApp) {

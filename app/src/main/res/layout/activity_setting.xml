@@ -67,6 +67,7 @@
                 android:textColor="@color/colorSecondaryText" />
 
             <LinearLayout
+                android:id="@+id/itemSampleRate44100"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_list_item"
@@ -87,7 +88,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
-                    android:id="@+id/ivChecked"
+                    android:id="@+id/srChecked"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="@string/des_checked"
@@ -99,6 +100,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/itemSampleRate48000"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_list_item"
@@ -119,7 +121,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
-                    android:id="@id/ivChecked"
+                    android:id="@id/srChecked"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="@string/des_checked"
@@ -132,7 +134,13 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/colorSettingSpace" />
+
         <LinearLayout
+            android:id="@+id/itemSoundEffects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -168,15 +176,10 @@
                     android:text="启用音效"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/ivChecked"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@string/des_checked"
-                    android:scaleType="centerInside"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_checkbox_checked"
-                    tools:visibility="visible" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSoundEffects"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -200,15 +203,10 @@
                     android:text="王者环绕"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@id/ivChecked"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@string/des_checked"
-                    android:scaleType="centerInside"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_checkbox_checked"
-                    tools:visibility="visible" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSurroundSound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -232,15 +230,10 @@
                     android:text="启用声场"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@id/ivChecked"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@string/des_checked"
-                    android:scaleType="centerInside"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_checkbox_checked"
-                    tools:visibility="visible" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swsoundField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -253,6 +246,11 @@
                 android:progress="3" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/colorSettingSpace" />
 
         <LinearLayout
             android:layout_width="match_parent"
