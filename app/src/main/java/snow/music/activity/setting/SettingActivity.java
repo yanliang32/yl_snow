@@ -4,29 +4,40 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import snow.music.R;
@@ -43,13 +54,16 @@ public class SettingActivity extends AppCompatActivity {
     private static final int DARK_MODE_ID_OFF = 2;
     private static final int DARK_MODE_ID_ON = 3;
 
+    final int[] flag = {0};
+
     private SettingViewModel mSettingViewModel;
 
     private View itemFollowSystem;
     private View itemDarkModeOff;
     private View itemDarkModeOn;
-    private View itemSampleRate44100;
-    private View itemSampleRate48000;
+    //private View itemSampleRate44100;
+    //private View itemSampleRate48000;
+    private Spinner sampleRate;
 
     private View itemSoundEffects;
     private SwitchCompat swSoundEffects;
@@ -66,7 +80,9 @@ public class SettingActivity extends AppCompatActivity {
     private SwitchCompat swPlayWithOtherApp;
 
     private CheckGroup mCheckGroup;
-    private CheckGroup srCheckGroup;
+    //private CheckGroup srCheckGroup;
+
+    private List<String> effectList;
 
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
@@ -85,35 +101,23 @@ public class SettingActivity extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 //此处是跳转的result回调方法
                 if (result.getData() != null && result.getResultCode() == Activity.RESULT_OK) {
-                    try {
-                        //保存读取到的内容
-                        StringBuilder eq = new StringBuilder();
-                        //获取URI
-                        Uri uri = Uri.parse(result.getData().getDataString());
-                        //获取输入流
-                        InputStream is = getContentResolver().openInputStream(uri);
-                        //创建用于字符输入流中读取文本的bufferReader对象
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            //将读取到的内容放入结果字符串
-                            eq.append(line);
-                        }
-                        //文件中的内容
-                        String content = eq.toString();
-                        String a = JMusicPlayer.getFileFromContentUri(getBaseContext(),uri);
-                        soundEffectFile.setText("《"+a.substring(a.lastIndexOf("/")+1,a.lastIndexOf("."))+"》");
-                        Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    String eqparam = result.getData().getDataString();
+                    Uri uri = Uri.parse(eqparam);
+                    String a = getFileRealNameFromUri(getApplication(),uri);
+                    mSettingViewModel.setEqparam(eqparam,a);
+                    soundEffectFile.setText("《"+a.substring(a.lastIndexOf("/")+1,a.lastIndexOf("."))+"》");
                 } else {
                     Toast.makeText(getApplicationContext(), "未选择音效文件", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public static String getFileRealNameFromUri(Context context, Uri fileUri) {
+        if (context == null || fileUri == null) return null;
+        DocumentFile documentFile = DocumentFile.fromSingleUri(context, fileUri);
+        if (documentFile == null) return null;
+        return documentFile.getName();
     }
 
     private void initViewModel() {
@@ -130,13 +134,14 @@ public class SettingActivity extends AppCompatActivity {
         itemFollowSystem = findViewById(R.id.itemFollowSystem);
         itemDarkModeOff = findViewById(R.id.itemDarkModeOff);
         itemDarkModeOn = findViewById(R.id.itemDarkModeOn);
-        itemSampleRate44100 = findViewById(R.id.itemSampleRate44100);
-        itemSampleRate48000 = findViewById(R.id.itemSampleRate48000);
+        //itemSampleRate44100 = findViewById(R.id.itemSampleRate44100);
+        //itemSampleRate48000 = findViewById(R.id.itemSampleRate48000);
+        sampleRate = findViewById(R.id.sampleRate);
 
         itemSoundEffects = findViewById(R.id.itemSoundEffects);
         swSoundEffects = findViewById(R.id.swSoundEffects);
         soundEffectFile = findViewById(R.id.soundEffectFile);
-        swSurroundSound = findViewById(R.id.swSurroundSound);
+        //swSurroundSound = findViewById(R.id.swSurroundSound);
         swsoundField = findViewById(R.id.swsoundField);
         soundFieldCount = findViewById(R.id.soundFieldCount);
         sbSoundField = findViewById(R.id.seekBarSoundField);
@@ -150,21 +155,21 @@ public class SettingActivity extends AppCompatActivity {
 
     private void initViews() {
         mCheckGroup = new CheckGroup();
-        srCheckGroup = new CheckGroup();
+        //srCheckGroup = new CheckGroup();
 
         DarkModeItem followSystem = new DarkModeItem(DARK_MODE_ID_FOLLOW_SYSTEM, itemFollowSystem);
         DarkModeItem darkModeOff = new DarkModeItem(DARK_MODE_ID_OFF, itemDarkModeOff);
         DarkModeItem darkModeOn = new DarkModeItem(DARK_MODE_ID_ON, itemDarkModeOn);
 
-        OutputSampleRate sampleRate44100 = new OutputSampleRate(44100,itemSampleRate44100);
-        OutputSampleRate sampleRate48000 = new OutputSampleRate(48000,itemSampleRate48000);
+        //OutputSampleRate sampleRate44100 = new OutputSampleRate(44100,itemSampleRate44100);
+        //OutputSampleRate sampleRate48000 = new OutputSampleRate(48000,itemSampleRate48000);
 
         mCheckGroup.addItem(followSystem);
         mCheckGroup.addItem(darkModeOff);
         mCheckGroup.addItem(darkModeOn);
 
-        srCheckGroup.addItem(sampleRate44100);
-        srCheckGroup.addItem(sampleRate48000);
+        //srCheckGroup.addItem(sampleRate44100);
+        //srCheckGroup.addItem(sampleRate48000);
 
         mSettingViewModel.getNightMode()
                 .observe(this, mode -> {
@@ -184,13 +189,43 @@ public class SettingActivity extends AppCompatActivity {
         mSettingViewModel.getSampleRate()
                 .observe(this,rate ->{
                     switch (rate){
-                        case "44100":
-                            srCheckGroup.setChecked(44100);
+                        case 44100:
+                            //srCheckGroup.setChecked(44100);
+                            sampleRate.setSelection(0);
                             break;
-                        case "48000":
-                            srCheckGroup.setChecked(48000);
+                        case 48000:
+                            //srCheckGroup.setChecked(48000);
+                            sampleRate.setSelection(1);
+                            break;
+                        case 96000:
+                            sampleRate.setSelection(2);
+                            break;
                     }
                 });
+
+        mSettingViewModel.getEqparam().observe(this,eqp ->{
+            soundEffectFile.setText("《"+eqp+"》");
+        });
+
+        mSettingViewModel.getSoundEffects().observe(this,se ->{
+            swSoundEffects.setChecked(se);
+        });
+
+        mSettingViewModel.getEnabledStereoWidth().observe(this,esw ->{
+            swsoundField.setChecked(esw);
+        });
+
+        mSettingViewModel.getStereoWidth().observe(this,sw ->{
+            sbSoundField.setProgress(Math.round(sw));
+        });
+
+        mSettingViewModel.getChafenDelay().observe(this,cd ->{
+            sbDifference.setProgress(cd);
+        });
+
+        mSettingViewModel.getEnabledChafen().observe(this,ec ->{
+            swDifference.setChecked(ec);
+        });
 
         Boolean value = mSettingViewModel.getPlayWithOtherApp().getValue();
         swPlayWithOtherApp.setChecked(Objects.requireNonNull(value));
@@ -201,8 +236,9 @@ public class SettingActivity extends AppCompatActivity {
         itemDarkModeOff.setOnClickListener(v -> mCheckGroup.setChecked(DARK_MODE_ID_OFF));
         itemDarkModeOn.setOnClickListener(v -> mCheckGroup.setChecked(DARK_MODE_ID_ON));
 
-        itemSampleRate44100.setOnClickListener(v -> srCheckGroup.setChecked(44100));
-        itemSampleRate48000.setOnClickListener(v -> srCheckGroup.setChecked(48000));
+        //itemSampleRate44100.setOnClickListener(v -> srCheckGroup.setChecked(44100));
+        //itemSampleRate48000.setOnClickListener(v -> srCheckGroup.setChecked(48000));
+
 
         mCheckGroup.setOnCheckedItemChangeListener(checkedItemId -> {
             switch (checkedItemId) {
@@ -220,48 +256,76 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        srCheckGroup.setOnCheckedItemChangeListener(checkedItemId -> {
-            switch (checkedItemId) {
-                case 44100:
-                    mSettingViewModel.setSampleRate("44100");
-                    Toast.makeText(getApplicationContext(), "44100", Toast.LENGTH_SHORT).show();
-                    break;
-                case 48000:
-                    mSettingViewModel.setSampleRate("48000");
-                    Toast.makeText(getApplicationContext(), "48000", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+//        srCheckGroup.setOnCheckedItemChangeListener(checkedItemId -> {
+//            switch (checkedItemId) {
+//                case 44100:
+//                    mSettingViewModel.setSampleRate(44100);
+//                    break;
+//                case 48000:
+//                    mSettingViewModel.setSampleRate(48000);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        });
+
+        sampleRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (flag[0] == 0){
+                    flag[0] = flag[0] + 1;
+                    return;
+                }
+                switch (i) {
+                    case 0:
+                        mSettingViewModel.setSampleRate(44100);
+                        break;
+                    case 1:
+                        mSettingViewModel.setSampleRate(48000);
+                        break;
+                    case 2:
+                        mSettingViewModel.setSampleRate(96000);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
         itemSoundEffects.setOnClickListener(v -> {
             swSoundEffects.toggle();
-            swSurroundSound.toggle();
+            //swSurroundSound.toggle();
             swsoundField.toggle();
         });
         swSoundEffects.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                Toast.makeText(getApplicationContext(), "启用音效", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setSoundEffects(true);
             }
             else {
-                Toast.makeText(getApplicationContext(), "关闭音效", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setSoundEffects(false);
             }
         });
-        swSurroundSound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Toast.makeText(getApplicationContext(), "启用王者环绕", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "关闭王者环绕", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        swSurroundSound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//
+//            }
+//            else {
+//
+//            }
+//        });
         swsoundField.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                Toast.makeText(getApplicationContext(), "启用声场", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setEnabledStereoWidth(true);
+
             }
             else {
-                Toast.makeText(getApplicationContext(), "关闭声场", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setEnabledStereoWidth(false);
+
             }
         });
         sbSoundField.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -277,15 +341,16 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //监听用户结束拖动进度条的时候
-                Toast.makeText(getApplicationContext(), "设置声场："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setStereoWidth((float) seekBar.getProgress());
+                //Toast.makeText(getApplicationContext(), "设置声场："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
             }
         });
         swDifference.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                Toast.makeText(getApplicationContext(), "启用差分", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setEnabledChafen(true);
             }
             else {
-                Toast.makeText(getApplicationContext(), "关闭差分", Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setEnabledChafen(false);
             }
         });
         sbDifference.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -301,7 +366,8 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //监听用户结束拖动进度条的时候
-                Toast.makeText(getApplicationContext(), "设置差分："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                mSettingViewModel.setChafenDelay(seekBar.getProgress());
+                //Toast.makeText(getApplicationContext(), "设置差分："+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -359,23 +425,23 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    private static class OutputSampleRate extends CheckGroup.CheckItem {
-        private ImageView srChecked;
-
-        public OutputSampleRate(int id, View itemView) {
-            super(id);
-            srChecked = itemView.findViewById(R.id.srChecked);
-        }
-
-        @Override
-        public void onChecked() {
-            srChecked.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onUnchecked() {
-            srChecked.setVisibility(View.GONE);
-        }
-    }
+//    private static class OutputSampleRate extends CheckGroup.CheckItem {
+//        private ImageView srChecked;
+//
+//        public OutputSampleRate(int id, View itemView) {
+//            super(id);
+//            srChecked = itemView.findViewById(R.id.srChecked);
+//        }
+//
+//        @Override
+//        public void onChecked() {
+//            srChecked.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        public void onUnchecked() {
+//            srChecked.setVisibility(View.GONE);
+//        }
+//    }
 
 }

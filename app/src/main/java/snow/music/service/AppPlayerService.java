@@ -44,7 +44,7 @@ public class AppPlayerService extends PlayerService {
     @NonNull
     @Override
     protected MusicPlayer onCreateMusicPlayer(@NonNull Context context, @NonNull MusicItem musicItem, @NonNull Uri uri) {
-        return new JMusicPlayer(context, uri);
+        return new JMusicPlayer(context, uri,musicItem.getPath());
     }
 
     @Nullable

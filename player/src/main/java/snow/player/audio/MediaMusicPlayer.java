@@ -260,6 +260,86 @@ public class MediaMusicPlayer extends AbstractMusicPlayer {
     }
 
     @Override
+    public void setEnabledStereoWidth(boolean var1) {
+
+    }
+
+    @Override
+    public void setEnabledEffect(boolean var1) {
+
+    }
+
+    @Override
+    public void setSampleRate(int var1) {
+
+    }
+
+    @Override
+    public void setStereoWidth(float var1) {
+
+    }
+
+    @Override
+    public void setEnabledChafen(boolean var1) {
+
+    }
+
+    @Override
+    public void setChafenDelay(int var1) {
+
+    }
+
+    @Override
+    public void setEnabledCompressor(boolean var1) {
+
+    }
+
+    @Override
+    public void setThreshold(float var1) {
+
+    }
+
+    @Override
+    public void setRatio(double var1) {
+
+    }
+
+    @Override
+    public void setAttack(double var1) {
+
+    }
+
+    @Override
+    public void setReleaseTime(double var1) {
+
+    }
+
+    @Override
+    public void setGain(double var1) {
+
+    }
+
+    @Override
+    public void setAutoGain(boolean var1) {
+
+    }
+
+    @Override
+    public void setDetectionType(String var1) {
+
+    }
+
+    @Override
+    public void setThresholdWidth(int var1) {
+
+    }
+
+    @Override
+    public void setEqparam(List<String> soundEffect) {
+
+    }
+
+    @Override
     public void releaseEx() {
         setInvalid();
         if (mMediaPlayer != null) {

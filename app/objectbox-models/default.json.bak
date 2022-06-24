@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5775022343501581136",
-      "lastPropertyId": "9:126351233256167422",
+      "lastPropertyId": "10:3916559018828419287",
       "name": "Music",
       "properties": [
         {
@@ -50,6 +50,11 @@
           "id": "8:1813883673919228300",
           "name": "addTime",
           "type": 6
+        },
+        {
+          "id": "10:3916559018828419287",
+          "name": "folder",
+          "type": 9
         }
       ],
       "relations": []

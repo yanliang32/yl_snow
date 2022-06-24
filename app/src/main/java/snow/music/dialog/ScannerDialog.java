@@ -425,6 +425,7 @@ public class ScannerDialog extends BottomDialog {
                     getAudioUri(cursor).toString(),
                     getAudioUri(cursor).toString(),
                     getFolder(cursor),
+                    getPath(cursor),
                     getDuration(cursor),
                     getDateModified(cursor));
         }
@@ -437,6 +438,10 @@ public class ScannerDialog extends BottomDialog {
         private String getFolder(Cursor cursor){
             String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
             return path.substring(0,path.lastIndexOf("/"));
+        }
+
+        private String getPath(Cursor cursor){
+            return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
         }
 
         public String optimizeText(String text, int stringId) {

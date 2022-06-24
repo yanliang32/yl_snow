@@ -3,6 +3,8 @@ package snow.player;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 import channel.helper.Channel;
 import channel.helper.UseOrdinal;
 import snow.player.audio.MusicItem;
@@ -98,6 +100,71 @@ public interface Player {
      * @param speed 播放速度，最小值为 0.1，最大值为 10。
      */
     void setSpeed(float speed);
+
+    /**
+     * 设置播放器是否开启声场。
+     */
+    void setEnabledStereoWidth(boolean var1);
+    /**
+     * 设置播放器是否开启音效。
+     */
+    void setEnabledEffect(boolean var1);
+    /**
+     * 设置播放器采样率。
+     */
+    void setSampleRate(int var1);
+    /**
+     * 设置播放器声场宽度。
+     */
+    void setStereoWidth(float var1);
+    /**
+     * 设置播放器是否开启差分。
+     */
+    void setEnabledChafen(boolean var1);
+    /**
+     * 设置播放器差分延迟。
+     */
+    void setChafenDelay(int var1);
+    /**
+     * 设置播放器是否开启硬膝压缩器。
+     */
+    void setEnabledCompressor(boolean var1);
+    /**
+     * 设置播放器硬膝压缩器阈值。
+     */
+    void setThreshold(float var1);
+    /**
+     * 设置播放器硬膝压缩器压缩比。
+     */
+    void setRatio(double var1);
+    /**
+     * 设置播放器硬膝压缩器启动时间。
+     */
+    void setAttack(double var1);
+    /**
+     * 设置播放器硬膝压缩器释放时间。
+     */
+    void setReleaseTime(double var1);
+    /**
+     * 设置播放器硬膝压缩器增益。
+     */
+    void setGain(double var1);
+    /**
+     * 设置播放器硬膝压缩器是否开启自动增益。
+     */
+    void setAutoGain(boolean var1);
+    /**
+     * 设置播放器。
+     */
+    void setDetectionType(String var1);
+    /**
+     * 设置播放器硬膝压缩器阈值宽度。
+     */
+    void setThresholdWidth(int var1);
+    /**
+     * 设置播放器音效文件。
+     */
+    void setEqparam(List<String> soundEffect);
 
     /**
      * 播放器状态改变监听器。

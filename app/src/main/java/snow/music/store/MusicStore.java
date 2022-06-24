@@ -949,6 +949,19 @@ public class MusicStore {
     }
 
     /**
+     * 获取所有的音频路径。
+     */
+    @NonNull
+    public synchronized List<String> getAllPath() {
+        checkThread();
+        return new ArrayList<>(Arrays.asList(mMusicBox.query()
+                .build()
+                .property(Music_.path)
+                .distinct()
+                .findStrings()));
+    }
+
+    /**
      * 获取指定歌手的全部音乐。
      *
      * @param artist 歌手名，不能为 null

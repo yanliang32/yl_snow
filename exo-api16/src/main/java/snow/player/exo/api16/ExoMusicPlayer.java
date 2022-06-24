@@ -20,6 +20,8 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceFactory;
 
+import java.util.List;
+
 import snow.player.audio.AbstractMusicPlayer;
 import snow.player.audio.ErrorCode;
 
@@ -298,6 +300,86 @@ public class ExoMusicPlayer extends AbstractMusicPlayer {
     public void setSpeed(float speed) {
         PlaybackParameters parameters = new PlaybackParameters(speed);
         mExoPlayer.setPlaybackParameters(parameters);
+    }
+
+    @Override
+    public void setEnabledStereoWidth(boolean var1) {
+
+    }
+
+    @Override
+    public void setEnabledEffect(boolean var1) {
+
+    }
+
+    @Override
+    public void setSampleRate(int var1) {
+
+    }
+
+    @Override
+    public void setStereoWidth(float var1) {
+
+    }
+
+    @Override
+    public void setEnabledChafen(boolean var1) {
+
+    }
+
+    @Override
+    public void setChafenDelay(int var1) {
+
+    }
+
+    @Override
+    public void setEnabledCompressor(boolean var1) {
+
+    }
+
+    @Override
+    public void setThreshold(float var1) {
+
+    }
+
+    @Override
+    public void setRatio(double var1) {
+
+    }
+
+    @Override
+    public void setAttack(double var1) {
+
+    }
+
+    @Override
+    public void setReleaseTime(double var1) {
+
+    }
+
+    @Override
+    public void setGain(double var1) {
+
+    }
+
+    @Override
+    public void setAutoGain(boolean var1) {
+
+    }
+
+    @Override
+    public void setDetectionType(String var1) {
+
+    }
+
+    @Override
+    public void setThresholdWidth(int var1) {
+
+    }
+
+    @Override
+    public void setEqparam(List<String> soundEffect) {
+
     }
 
     @Override

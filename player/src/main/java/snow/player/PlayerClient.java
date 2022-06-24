@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1012,6 +1013,262 @@ public class PlayerClient implements Player, PlayerManager, PlaylistManager, Pla
         }
 
         mPlayer.setSpeed(speed);
+    }
+
+    @Override
+    public void setEnabledStereoWidth(boolean enabledStereoWidth) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabledStereoWidth(enabledStereoWidth);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setEnabledStereoWidth(enabledStereoWidth);
+    }
+
+    @Override
+    public void setEnabledEffect(boolean enabledEffect) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabledEffect(enabledEffect);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setEnabledEffect(enabledEffect);
+    }
+
+    @Override
+    public void setSampleRate(int sampleRate) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setSampleRate(sampleRate);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setSampleRate(sampleRate);
+    }
+
+    @Override
+    public void setStereoWidth(float stereoWidth) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setStereoWidth(stereoWidth);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setStereoWidth(stereoWidth);
+    }
+
+    @Override
+    public void setEnabledChafen(boolean enabledChafen) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabledChafen(enabledChafen);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setEnabledChafen(enabledChafen);
+    }
+
+    @Override
+    public void setChafenDelay(int chafenDelay) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setChafenDelay(chafenDelay);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setChafenDelay(chafenDelay);
+    }
+
+    @Override
+    public void setEnabledCompressor(boolean enabledCompressor) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabledCompressor(enabledCompressor);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setEnabledCompressor(enabledCompressor);
+    }
+
+    @Override
+    public void setThreshold(float threshold) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setThreshold(threshold);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setThreshold(threshold);
+    }
+
+    @Override
+    public void setRatio(double ratio) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setRatio(ratio);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setRatio(ratio);
+    }
+
+    @Override
+    public void setAttack(double attack) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setAttack(attack);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setAttack(attack);
+    }
+
+    @Override
+    public void setReleaseTime(double releaseTime) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setReleaseTime(releaseTime);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setReleaseTime(releaseTime);
+    }
+
+    @Override
+    public void setGain(double gain) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setGain(gain);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setGain(gain);
+    }
+
+    @Override
+    public void setAutoGain(boolean autoGain) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setAutoGain(autoGain);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setAutoGain(autoGain);
+    }
+
+    @Override
+    public void setDetectionType(String detectionType) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setDetectionType(detectionType);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setDetectionType(detectionType);
+    }
+
+    @Override
+    public void setThresholdWidth(int thresholdWidth) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setThresholdWidth(thresholdWidth);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setThresholdWidth(thresholdWidth);
+    }
+
+    @Override
+    public void setEqparam(List<String> eqparam) {
+
+        if (notConnected()) {
+            tryAutoConnect(new Runnable() {
+                @Override
+                public void run() {
+                    setEqparam(eqparam);
+                }
+            });
+            return;
+        }
+
+        mPlayer.setEqparam(eqparam);
     }
 
     private void tryAutoConnect(@Nullable Runnable connectedAction) {

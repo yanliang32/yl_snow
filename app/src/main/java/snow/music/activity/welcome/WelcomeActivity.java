@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.CrashUtils;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -20,6 +22,8 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        CrashUtils.init();
     }
 
     @Override

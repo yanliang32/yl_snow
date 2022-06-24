@@ -19,6 +19,7 @@
     <string name="snow_music_item_unknown_artist">Unknown Artist</string>
     <string name="snow_music_item_unknown_album">Unknown Album</string>
     <string name="snow_music_item_unknown_folder">Unknown Folder</string>
+    <string name="snow_music_item_unknown_path">Unknown Path</string>
 
     <string name="snow_notification_channel_name">Player Controller</string>
 

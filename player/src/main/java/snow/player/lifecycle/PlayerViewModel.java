@@ -2,6 +2,7 @@ package snow.player.lifecycle;
 
 import android.content.Context;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.google.common.base.Preconditions;
+
+import java.util.List;
 
 import snow.player.PlayMode;
 import snow.player.PlaybackState;
@@ -1083,6 +1086,150 @@ public class PlayerViewModel extends ViewModel {
     }
 
     /**
+     * 设置播放器是否开启声场。
+     */
+    public void setEnabledStereoWidth(boolean enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setEnabledStereoWidth(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器是否开启音效。
+     */
+    public void setEnabledEffect(boolean enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setEnabledEffect(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器采样率。
+     */
+    public void setSampleRate(int enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setSampleRate(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器声场宽度。
+     */
+    public void setStereoWidth(float enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setStereoWidth(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器是否开启差分。
+     */
+    public void setEnabledChafen(boolean enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setEnabledChafen(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器差分延迟。
+     */
+    public void setChafenDelay(int enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setChafenDelay(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器是否开启硬膝压缩器。
+     */
+    public void setEnabledCompressor(boolean enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setEnabledCompressor(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器阈值。
+     */
+    public void setThreshold(float enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setThreshold(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器压缩比。
+     */
+    public void setRatio(double enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setRatio(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器启动时间。
+     */
+    public void setAttack(double enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setAttack(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器释放时间。
+     */
+    public void setReleaseTime(double enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setReleaseTime(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器增益。
+     */
+    public void setGain(double enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setGain(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器是否开启自动增益。
+     */
+    public void setAutoGain(boolean enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setAutoGain(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器。
+     */
+    public void setDetectionType(String enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setDetectionType(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器硬膝压缩器阈值宽度。
+     */
+    public void setThresholdWidth(int enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setThresholdWidth(enabledStereoWidth);
+        }
+    }
+
+    /**
+     * 设置播放器音效文件。
+     */
+    public void setEqparam(List<String> enabledStereoWidth) {
+        if (isInitialized()) {
+            mPlayerClient.setEqparam(enabledStereoWidth);
+        }
+    }
+
+    /**
      * 调整音乐播放进度（单位：毫秒）。
      * <p>
      * 注意！seekTo 方法接收的参数的单位是 <b>毫秒</b>，请注意与 {@link #getPlayProgress()}、
@@ -1091,6 +1238,9 @@ public class PlayerViewModel extends ViewModel {
      * @param progress 要调整到的播放进度（单位：毫秒）
      */
     public void seekTo(int progress) {
+        if(progress<=1000){
+            progress=2000;
+        }
         if (isInitialized()) {
             mProgressClock.cancel();
             mPlayerClient.seekTo(progress);

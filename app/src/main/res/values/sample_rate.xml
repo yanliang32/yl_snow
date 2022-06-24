@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="samplerate_string">
+        <item>44100</item>
+        <item>48000</item>
+        <item>96000</item>
+    </string-array>
+</resources>

@@ -5,23 +5,43 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.blankj.utilcode.util.CacheDiskStaticUtils;
+import com.blankj.utilcode.util.CacheDiskUtils;
+import com.blankj.utilcode.util.CacheDoubleStaticUtils;
+import com.blankj.utilcode.util.UriUtils;
+import com.blankj.utilcode.util.Utils;
+import com.tencent.mmkv.MMKV;
+import com.zj.jplayercore.controller.JEqparam;
+import com.zj.jplayercore.controller.JPlayer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.google.common.base.Preconditions;
-import com.zj.jplayercore.controller.Jplayer;
 
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import snow.music.util.GetFilePathFromUri;
+import snow.music.util.NightModeUtil;
 import snow.player.audio.AbstractMusicPlayer;
 import snow.player.audio.ErrorCode;
 
@@ -33,10 +53,12 @@ public class JMusicPlayer extends AbstractMusicPlayer {
 
     private final Context mContext;
     private final Uri mUri;
+    private final String mPath;
     private final Map<String, String> mHeaders;
     private List<HttpCookie> mCookies;
+    private static List<JEqparam> jEqparams = new ArrayList<>();
 
-    private Jplayer jplayer;
+    private JPlayer jplayer;
 
     @Nullable
     private OnErrorListener mErrorListener;
@@ -57,8 +79,8 @@ public class JMusicPlayer extends AbstractMusicPlayer {
      * @param context Context 对象，不能为 null
      * @param uri     要播放的歌曲的 URI，不能为 null
      */
-    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri) {
-        this(context, uri, null);
+    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri,@NonNull String path) {
+        this(context, uri,path, null);
     }
 
     /**
@@ -68,22 +90,37 @@ public class JMusicPlayer extends AbstractMusicPlayer {
      * @param uri     要播放的歌曲的 URI，不能为 null
      * @param headers HTTP 首部
      */
-    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri, @Nullable Map<String, String> headers) {
+    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri,@NonNull String path, @Nullable Map<String, String> headers) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(uri);
 
         mContext = context;
         mUri = uri;
+        mPath = path;
         mHeaders = headers;
 
-        jplayer = new Jplayer();
+        jplayer = new JPlayer();
         mInvalid = false;
+
+//        loadEqparam();
+//        setEnabledEffect();
+//        setEnabledStereoWidth();
+//        setEnabledChafen();
+//        setChafenDelay();
+//        setStereoWidth();
+        setEnabledStereoWidth(isEnabledStereoWidth(mContext));
+        setStereoWidth(getStereoWidth(mContext));
+        setSampleRate(getSampleRate(mContext));
+        setEnabledEffect(isEnabledEffect(mContext));
+        setEnabledChafen(isEnabledChafen(mContext));
+        setChafenDelay(getChafenDelay(mContext));
+        loadEqparam();
 
         jplayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
 
-        jplayer.setOnErrorListener(new Jplayer.OnErrorListener() {
+        jplayer.setOnErrorListener(new JPlayer.OnErrorListener() {
             @Override
-            public boolean onError(Jplayer mp, int what, int extra) {
+            public boolean onError(JPlayer mp, int what, int extra) {
                 Log.e(TAG, "Jplayer Error[what: " + what + ", extra: " + extra + "]");
 
                 setInvalid();
@@ -95,25 +132,25 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             }
         });
 
-//        jplayer.setOnInfoListener(new Jplayer.OnInfoListener() {
-//            @Override
-//            public boolean onInfo(Jplayer mp, int what, int extra) {
-//                switch (what) {
-//                    case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-//                        setStalled(true);
-//                        return true;
-//                    case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-//                        setStalled(false);
-//                        return true;
-//                }
-//
-//                return false;
-//            }
-//        });
-
-        jplayer.setOnCompletionListener(new Jplayer.OnCompletionListener() {
+        jplayer.setOnInfoListener(new JPlayer.OnInfoListener() {
             @Override
-            public void onCompletion(Jplayer mp) {
+            public boolean onInfo(JPlayer mp, int what, int extra) {
+                switch (what) {
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                        //setStalled(true);
+                        return true;
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                        //setStalled(false);
+                        return true;
+                }
+
+                return false;
+            }
+        });
+
+        jplayer.setOnCompletionListener(new JPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(JPlayer mp) {
                 if (mLooping) {
                     mp.start();
                     notifyOnRepeat();
@@ -146,8 +183,8 @@ public class JMusicPlayer extends AbstractMusicPlayer {
      * @param cookies HTTP cookies
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri, @Nullable Map<String, String> headers, @Nullable List<HttpCookie> cookies) {
-        this(context, uri, headers);
+    public JMusicPlayer(@NonNull Context context, @NonNull Uri uri,@NonNull String path, @Nullable Map<String, String> headers, @Nullable List<HttpCookie> cookies) {
+        this(context, uri,path, headers);
         mCookies = cookies;
     }
 
@@ -186,12 +223,13 @@ public class JMusicPlayer extends AbstractMusicPlayer {
         if (isInvalid()) {
             return;
         }
-
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                jplayer.setDataSource(getFileFromContentUri(mContext,mUri));
+                //jplayer.setDataSource(GetFilePathFromUri.getFileAbsolutePath(mContext,mUri));
+                //jplayer.setDataSource(UriUtils.uri2File(mUri).getAbsolutePath());
+                jplayer.setDataSource(mPath);
             } else {
-                jplayer.setDataSource(getFileFromContentUri(mContext,mUri));
+                jplayer.setDataSource(mPath);
             }
             jplayer.prepare();
             startEx();
@@ -201,30 +239,6 @@ public class JMusicPlayer extends AbstractMusicPlayer {
         }
     }
 
-    //因为目前播放器不支持使用uri异步播放，需要将uri转为文件路径
-    @SuppressLint("Range")
-    public static String getFileFromContentUri(Context context, Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String filePath;
-        String[] filePathColumn = {MediaStore.DownloadColumns.DATA, MediaStore.DownloadColumns.DISPLAY_NAME};
-        ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, filePathColumn, null,
-                null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            try {
-                filePath = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
-                return filePath;
-            } catch (Exception e) {
-            } finally {
-                cursor.close();
-            }
-        }
-        return "";
-    }
-
     @Override
     public void setLooping(boolean looping) {
         mLooping = looping;
@@ -232,7 +246,7 @@ public class JMusicPlayer extends AbstractMusicPlayer {
 
     @Override
     public boolean isLooping() {
-        return jplayer.isLooping();
+        return false;
     }
 
     @Override
@@ -256,7 +270,9 @@ public class JMusicPlayer extends AbstractMusicPlayer {
     }
 
     @Override
-    public void startEx() { jplayer.start(); }
+    public void startEx() {
+        jplayer.start();
+    }
 
     @Override
     public void pauseEx() {
@@ -269,9 +285,7 @@ public class JMusicPlayer extends AbstractMusicPlayer {
     }
 
     @Override
-    public void seekTo(int pos) {
-        jplayer.seekTo(pos);
-    }
+    public void seekTo(int pos) { jplayer.seekTo(pos);}
 
     @Override
     public void setVolume(float leftVolume, float rightVolume) {
@@ -284,9 +298,9 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             return;
         }
 
-//        PlaybackParams playbackParams = jplayer.getPlaybackParams();
-//        playbackParams.setSpeed(speed);
-//        jplayer.setPlaybackParams(playbackParams);
+        PlaybackParams playbackParams = jplayer.audioTrack.getPlaybackParams();
+        playbackParams.setSpeed(speed);
+        jplayer.audioTrack.setPlaybackParams(playbackParams);
     }
 
     @Override
@@ -319,9 +333,9 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             return;
         }
 
-        jplayer.setOnPreparedListener(new Jplayer.OnPreparedListener() {
+        jplayer.setOnPreparedListener(new JPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(Jplayer mp) {
+            public void onPrepared(JPlayer mp) {
                 listener.onPrepared(JMusicPlayer.this);
             }
         });
@@ -339,17 +353,17 @@ public class JMusicPlayer extends AbstractMusicPlayer {
 
     @Override
     public void setOnSeekCompleteListener(@Nullable final OnSeekCompleteListener listener) {
-//        if (listener == null) {
-//            jplayer.setOnSeekCompleteListener(null);
-//            return;
-//        }
-//
-//        jplayer.setOnSeekCompleteListener(new Jplayer.OnSeekCompleteListener() {
-//            @Override
-//            public void onSeekComplete(Jplayer mp) {
-//                listener.onSeekComplete(JMusicPlayer.this);
-//            }
-//        });
+        if (listener == null) {
+            jplayer.setOnSeekCompleteListener(null);
+            return;
+        }
+
+        jplayer.setOnSeekCompleteListener(new JPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(JPlayer mp) {
+                listener.onSeekComplete(JMusicPlayer.this);
+            }
+        });
     }
 
     @Override
@@ -364,16 +378,11 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             return;
         }
 
-        jplayer.setOnBufferingUpdateListener(new Jplayer.OnBufferingUpdateListener() {
+        jplayer.setOnBufferingUpdateListener(new JPlayer.OnBufferingUpdateListener() {
             @Override
-            public void onCompletion() {
-
+            public void onBufferingUpdate(JPlayer jPlayer, int i, boolean b) {
+                listener.onBufferingUpdate(JMusicPlayer.this, i, b);
             }
-
-//            @Override
-//            public void onBufferingUpdate(Jplayer mp, int percent) {
-//                listener.onBufferingUpdate(JMusicPlayer.this, percent, true);
-//            }
         });
     }
 
@@ -381,4 +390,306 @@ public class JMusicPlayer extends AbstractMusicPlayer {
     public void setOnErrorListener(@Nullable OnErrorListener listener) {
         mErrorListener = listener;
     }
+
+    @Override
+    public void setEnabledStereoWidth(boolean enabledStereoWidth){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("EnabledStereoWidth", enabledStereoWidth);
+
+        JPlayer.jConfig.setEnabledStereoWidth(enabledStereoWidth);
+        Log.d(TAG, "setEnabledStereoWidth: "+enabledStereoWidth);
+    }
+
+    @Override
+    public void setEnabledEffect(boolean enabledEffect){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("EnabledEffect", enabledEffect);
+
+        JPlayer.jConfig.setEnabledEffect(enabledEffect);
+        Log.d(TAG, "setEnabledEffect: "+enabledEffect);
+    }
+
+    @Override
+    public void setSampleRate(int sampleRate){
+        if(sampleRate!=44100 && sampleRate != 48000  && sampleRate != 96000 ){
+            return;
+        }
+        jplayer.changeSampleRate(sampleRate);
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("SampleRate", sampleRate);
+        Log.d(TAG, "setSampleRate: "+sampleRate);
+    }
+
+    @Override
+    public void setStereoWidth(float stereoWidth){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("SetStereoWidth", stereoWidth);
+
+        JPlayer.jConfig.setStereoWidth(stereoWidth);
+        Log.d(TAG, "setStereoWidth: "+stereoWidth);
+    }
+
+    @Override
+    public void setEnabledChafen(boolean enabledChafen){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("EnabledChafen", enabledChafen);
+
+        JPlayer.jConfig.setEnabledChafen(enabledChafen);
+        Log.d(TAG, "setEnabledChafen: "+enabledChafen);
+    }
+
+    @Override
+    public void setChafenDelay(int chafenDelay){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkv.encode("SetChafenDelay", chafenDelay);
+
+        JPlayer.jConfig.setChafenDelay(chafenDelay);
+        Log.d(TAG, "setChafenDelay: "+chafenDelay);
+    }
+
+    @Override
+    public void setEnabledCompressor(boolean enabledCompressor){
+        Log.d(TAG, "setEnabledCompressor: ");
+    }
+
+    @Override
+    public void setThreshold(float threshold){
+        Log.d(TAG, "setThreshold: ");
+    }
+
+    @Override
+    public void setRatio(double ratio){
+        Log.d(TAG, "setRatio: ");
+    }
+
+    @Override
+    public void setAttack(double attack){
+        Log.d(TAG, "setAttack: ");
+    }
+
+    @Override
+    public void setReleaseTime(double releaseTime){
+        Log.d(TAG, "setReleaseTime: ");
+    }
+
+    @Override
+    public void setGain(double gain){
+        Log.d(TAG, "setGain: ");
+    }
+
+    @Override
+    public void setAutoGain(boolean autoGain){
+        Log.d(TAG, "setAutoGain: ");
+    }
+
+    @Override
+    public void setDetectionType(String detectionType){
+        Log.d(TAG, "setDetectionType: ");
+    }
+
+    @Override
+    public void setThresholdWidth(int thresholdWidth){
+        Log.d(TAG, "setThresholdWidth: ");
+    }
+
+    @Override
+    public void setEqparam(List<String> eqparam){
+        MMKV mmkvFilter = MMKV.mmkvWithID(getMMapId(mContext));
+        mmkvFilter.encode("eqparamNmae", eqparam.get(0));
+        jEqparams.clear();
+        String preCut = "0";
+        String[] precut = eqparam.get(eqparam.size()-1).split(" ");
+        if(precut[0].equals("precut")){
+            preCut=precut[1];
+        }
+        mmkvFilter.encode("precut", preCut);
+        for (String a:eqparam
+        ) {
+            String[] filter = a.split(" ");
+            if(filter.length==5 && filter[0].equals("filter")){
+                JEqparam eq1 = new JEqparam();
+                eq1.setFreq(Double.parseDouble(filter[2]));
+                eq1.setPeak(Double.parseDouble(filter[4]));
+                eq1.setQ(Double.parseDouble(filter[3]));
+                eq1.setPrecut(Double.parseDouble(preCut));
+                jEqparams.add(eq1);
+                mmkvFilter.encode(filter[0]+filter[1], a);
+            }
+        }
+        if(jEqparams!=null && jEqparams.size()>0){
+            jplayer.loadEQ(jEqparams);
+        }
+        Log.d(TAG, "setEqparam: "+eqparam);
+    }
+
+//    private void setSampleRate(){
+//        int sampleRate = getSampleRate(mContext);
+//        if(sampleRate!=44100 && sampleRate != 48000  && sampleRate != 96000 ){
+//            return;
+//        }
+//        jplayer.changeSampleRate(sampleRate);
+//        Log.d(TAG, "changeSampleRate: "+sampleRate);
+//    }
+
+    public static int getSampleRate(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeInt("SampleRate", 44100);
+    }
+
+//    public static void changeSampleRate(@NonNull Context context,int sampleRate){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("SampleRate", sampleRate);
+//    }
+
+    private static String getMMapId(Context context) {
+        return context.getPackageName() + ".Effect";
+    }
+
+
+
+    private void setEnabledEffect(){
+        boolean a = isEnabledEffect(mContext);
+        JPlayer.jConfig.setEnabledEffect(a);
+    }
+
+//    public static void enabledEffect(@NonNull Context context,boolean ef){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("EnabledEffect", ef);
+//
+//        JPlayer.jConfig.setEnabledEffect(ef);
+//        Log.d(TAG, "enabledEffect: "+ef);
+//    }
+
+    public static boolean isEnabledEffect(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeBool("EnabledEffect", false);
+    }
+
+    private void setEnabledStereoWidth(){
+        boolean a = isEnabledStereoWidth(mContext);
+        JPlayer.jConfig.setEnabledStereoWidth(a);
+    }
+
+//    public static void enabledStereoWidth(@NonNull Context context,boolean ef){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("EnabledStereoWidth", ef);
+//
+//        JPlayer.jConfig.setEnabledStereoWidth(ef);
+//        Log.d(TAG, "enabledStereoWidth: "+ef);
+//    }
+
+    public static boolean isEnabledStereoWidth(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeBool("EnabledStereoWidth", false);
+    }
+
+    private void setStereoWidth(){
+        float a = getStereoWidth(mContext);
+        JPlayer.jConfig.setStereoWidth(a);
+    }
+
+//    public static void changeStereoWidth(@NonNull Context context,float ef){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("SetStereoWidth", ef);
+//
+//        JPlayer.jConfig.setStereoWidth(ef);
+//        Log.d(TAG, "SetStereoWidth: "+ef);
+//    }
+
+    public static float getStereoWidth(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeFloat("SetStereoWidth", 10);
+    }
+
+    private void setEnabledChafen(){
+        boolean a = isEnabledChafen(mContext);
+        JPlayer.jConfig.setEnabledChafen(a);
+    }
+
+//    public static void enabledChafen(@NonNull Context context,boolean ef){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("EnabledChafen", ef);
+//
+//        JPlayer.jConfig.setEnabledChafen(ef);
+//        Log.d(TAG, "enabledChafen: "+ef);
+//    }
+
+    public static boolean isEnabledChafen(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeBool("EnabledChafen", false);
+    }
+
+    private void setChafenDelay(){
+        int a = getChafenDelay(mContext);
+        JPlayer.jConfig.setChafenDelay(a);
+    }
+
+//    public static void changeChafenDelay(@NonNull Context context,int ef){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("SetChafenDelay", ef);
+//
+//        JPlayer.jConfig.setChafenDelay(ef);
+//        Log.d(TAG, "SetChafenDelay: "+ef);
+//    }
+
+    public static int getChafenDelay(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeInt("SetChafenDelay", 20);
+    }
+
+    private void loadEqparam(){
+        jEqparams.clear();
+        String precut;
+        MMKV mmkvPrecut = MMKV.mmkvWithID(getMMapId(mContext));
+        precut = mmkvPrecut.decodeString("precut","0");
+        String line;
+        for (int i =0;i<10;i++){
+            MMKV mmkvFilter = MMKV.mmkvWithID(getMMapId(mContext));
+            line = mmkvFilter.decodeString("filter"+i,"");
+            String[] filter = line.split(" ");
+            if(filter.length==5 && filter[0].equals("filter")){
+                JEqparam eq1 = new JEqparam();
+                eq1.setFreq(Double.parseDouble(filter[2]));
+                eq1.setPeak(Double.parseDouble(filter[4]));
+                eq1.setQ(Double.parseDouble(filter[3]));
+                eq1.setPrecut(Double.parseDouble(precut));
+                jEqparams.add(eq1);
+            }
+        }
+        if(jEqparams!=null && jEqparams.size()>0){
+            jplayer.loadEQ(jEqparams);
+            Log.d(TAG, "loadEqparam: "+jEqparams.get(0).freq+" "+jEqparams.get(0).peak+" "+jEqparams.get(0).q+" "+jEqparams.get(0).precut);
+        }
+    }
+
+    public static String getEqparamName(@NonNull Context context){
+        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+        return mmkv.decodeString("eqparamNmae", "默认");
+    }
+
+//    public static void changeEqparam(@NonNull Context context,String name,List<String> Eqparam){
+//        MMKV mmkv = MMKV.mmkvWithID(getMMapId(context));
+//        MMKV mmkvFilter = MMKV.mmkvWithID(getMMapId(context));
+//        mmkv.encode("Eqparam", name);
+//        jEqparams.clear();
+//        String preCut = "0";
+//        String[] precut = Eqparam.get(Eqparam.size()-1).split(" ");
+//        if(precut[0].equals("precut")){
+//            preCut=precut[1];
+//        }
+//        mmkvFilter.encode("precut", preCut);
+//        for (String a:Eqparam
+//             ) {
+//            String[] filter = a.split(" ");
+//            if(filter.length==5 && filter[0].equals("filter")){
+//                JEqparam eq1 = new JEqparam();
+//                eq1.setFreq(Double.parseDouble(filter[2]));
+//                eq1.setPeak(Double.parseDouble(filter[4]));
+//                eq1.setQ(Double.parseDouble(filter[3]));
+//                eq1.setPrecut(Double.parseDouble(preCut));
+//                jEqparams.add(eq1);
+//                mmkvFilter.encode(filter[0]+filter[1], a);
+//            }
+//        }
+//    }
 }

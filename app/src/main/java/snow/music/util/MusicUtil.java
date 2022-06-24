@@ -40,6 +40,7 @@ public final class MusicUtil {
                 musicItem.getUri(),
                 musicItem.getIconUri(),
                 musicItem.getFolder(),
+                musicItem.getPath(),
                 musicItem.getDuration(),
                 getAddTime(musicItem)
         );
@@ -54,6 +55,7 @@ public final class MusicUtil {
                 .setArtist(music.getArtist())
                 .setAlbum(music.getAlbum())
                 .setFolder(music.getFolder())
+                .setPath(music.getPath())
                 .setUri(music.getUri())
                 .setIconUri(music.getIconUri())
                 .setDuration(music.getDuration())

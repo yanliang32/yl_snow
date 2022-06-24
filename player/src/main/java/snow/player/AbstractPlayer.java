@@ -1774,6 +1774,134 @@ abstract class AbstractPlayer implements Player, PlaylistEditor {
     }
 
     @Override
+    public void setEnabledStereoWidth(boolean enabledStereoWidth){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setEnabledStereoWidth(enabledStereoWidth);
+        }
+    }
+
+    @Override
+    public void setEnabledEffect(boolean enabledEffect){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setEnabledEffect(enabledEffect);
+        }
+    }
+
+    @Override
+    public void setSampleRate(int sampleRate){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setSampleRate(sampleRate);
+        }
+    }
+
+    @Override
+    public void setStereoWidth(float stereoWidth){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setStereoWidth(stereoWidth);
+        }
+    }
+
+    @Override
+    public void setEnabledChafen(boolean enabledChafen){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setEnabledChafen(enabledChafen);
+        }
+    }
+
+    @Override
+    public void setChafenDelay(int chafenDelay){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setChafenDelay(chafenDelay);
+        }
+    }
+
+    @Override
+    public void setEnabledCompressor(boolean enabledCompressor){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setEnabledCompressor(enabledCompressor);
+        }
+    }
+
+    @Override
+    public void setThreshold(float threshold){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setThreshold(threshold);
+        }
+    }
+
+    @Override
+    public void setRatio(double ratio){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setRatio(ratio);
+        }
+    }
+
+    @Override
+    public void setAttack(double attack){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setAttack(attack);
+        }
+    }
+
+    @Override
+    public void setReleaseTime(double releaseTime){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setReleaseTime(releaseTime);
+        }
+    }
+
+    @Override
+    public void setGain(double gain){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setGain(gain);
+        }
+    }
+
+    @Override
+    public void setAutoGain(boolean autoGain){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setAutoGain(autoGain);
+        }
+    }
+
+    @Override
+    public void setDetectionType(String detectionType){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setDetectionType(detectionType);
+        }
+    }
+
+    @Override
+    public void setThresholdWidth(int thresholdWidth){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setThresholdWidth(thresholdWidth);
+        }
+    }
+
+    @Override
+    public void setEqparam(List<String> eqparam){
+        if (isPrepared()) {
+            assert mMusicPlayer != null;
+            mMusicPlayer.setEqparam(eqparam);
+        }
+    }
+
+    @Override
     public void setPlaylist(Playlist playlist, final int position, final boolean play) {
         if (position < 0 || position >= playlist.size()) {
             notifyError(ErrorCode.PLAY_POSITION_OUT_OF_BOUNDS, ErrorCode.getErrorMessage(mApplicationContext, ErrorCode.PLAY_POSITION_OUT_OF_BOUNDS));

@@ -29,6 +29,7 @@ public final class MusicItem implements Parcelable {
     private String uri;
     private String iconUri;
     private String folder;
+    private String path;
     private int duration;
     private boolean forbidSeek;
     @Nullable
@@ -50,6 +51,7 @@ public final class MusicItem implements Parcelable {
         this.uri = "";
         this.iconUri = "";
         this.folder = "";
+        this.path = "";
         this.duration = 0;
         this.extra = null;
         this.forbidSeek = false;
@@ -71,6 +73,7 @@ public final class MusicItem implements Parcelable {
         uri = source.uri;
         iconUri = source.iconUri;
         folder = source.folder;
+        path = source.path;
         duration = source.duration;
         forbidSeek = source.forbidSeek;
         autoDuration = source.autoDuration;
@@ -210,6 +213,16 @@ public final class MusicItem implements Parcelable {
     }
 
     /**
+     * 获取歌曲所在路径（NonNull）。
+     *
+     * @return 歌曲所在路径（NonNull）
+     */
+    @NonNull
+    public String getPath() {
+        return path;
+    }
+
+    /**
      * 设置歌曲所在文件夹（NonNull）。
      *
      * @param folder 要设置的图标 Uri（NonNull）
@@ -217,6 +230,16 @@ public final class MusicItem implements Parcelable {
     public void setFolder(@NonNull String folder) {
         Preconditions.checkNotNull(folder);
         this.folder = folder;
+    }
+
+    /**
+     * 设置歌曲所在路径（NonNull）。
+     *
+     * @param path 要设置的图标 Uri（NonNull）
+     */
+    public void setPath(@NonNull String path) {
+        Preconditions.checkNotNull(path);
+        this.path = path;
     }
 
     /**
@@ -324,6 +347,7 @@ public final class MusicItem implements Parcelable {
                 Objects.equal(uri, other.uri) &&
                 Objects.equal(iconUri, other.iconUri) &&
                 Objects.equal(folder, other.folder) &&
+                Objects.equal(path, other.path) &&
                 Objects.equal(duration, other.duration) &&
                 Objects.equal(forbidSeek, other.forbidSeek) &&
                 Objects.equal(autoDuration, other.autoDuration);
@@ -341,6 +365,7 @@ public final class MusicItem implements Parcelable {
                 uri,
                 iconUri,
                 folder,
+                path,
                 duration,
                 forbidSeek,
                 autoDuration);
@@ -356,6 +381,7 @@ public final class MusicItem implements Parcelable {
                 ", uri='" + uri + '\'' +
                 ", iconUri='" + iconUri + '\'' +
                 ", folder='" + folder + '\'' +
+                ", path='" + path + '\'' +
                 ", duration=" + duration +
                 ", forbidSeek=" + forbidSeek +
                 ", autoDuration=" + autoDuration +
@@ -376,6 +402,7 @@ public final class MusicItem implements Parcelable {
         dest.writeString(this.uri);
         dest.writeString(this.iconUri);
         dest.writeString(this.folder);
+        dest.writeString(this.path);
         dest.writeInt(this.duration);
         dest.writeByte((byte) (this.forbidSeek ? 1 : 0));
         dest.writeParcelable(extra, 0);
@@ -396,6 +423,7 @@ public final class MusicItem implements Parcelable {
         this.uri = in.readString();
         this.iconUri = in.readString();
         this.folder = in.readString();
+        this.path = in.readString();
         this.duration = in.readInt();
         this.forbidSeek = in.readByte() == 1;
         this.extra = in.readParcelable(Thread.currentThread().getContextClassLoader());
@@ -446,6 +474,7 @@ public final class MusicItem implements Parcelable {
         private String uri;
         private String iconUri = "";
         private String folder = "";
+        private String path = "";
         private int duration;
         private boolean forbidSeek = false;
         private Bundle extra;
@@ -460,6 +489,7 @@ public final class MusicItem implements Parcelable {
             this.artist = context.getString(R.string.snow_music_item_unknown_artist);
             this.album = context.getString(R.string.snow_music_item_unknown_album);
             this.folder = context.getString(R.string.snow_music_item_unknown_folder);
+            this.path = context.getString(R.string.snow_music_item_unknown_path);
         }
 
         /**
@@ -540,6 +570,17 @@ public final class MusicItem implements Parcelable {
         }
 
         /**
+         * 设置歌曲所在路径（NonNull）。
+         *
+         * @param path 要设置的 路径（NonNull）
+         */
+        public Builder setPath(@NonNull String path) {
+            Preconditions.checkNotNull(path);
+            this.path = path;
+            return this;
+        }
+
+        /**
          * 设置歌曲的持续时间（播放时长）。
          *
          * @param duration 歌曲的持续时间，小于 0 时，duration 的值将被设置为 0
@@ -613,6 +654,7 @@ public final class MusicItem implements Parcelable {
             musicItem.setUri(uri);
             musicItem.setIconUri(iconUri);
             musicItem.setFolder(folder);
+            musicItem.setPath(path);
             musicItem.setDuration(duration);
             musicItem.setForbidSeek(forbidSeek);
             musicItem.setExtra(extra);

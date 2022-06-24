@@ -20,10 +20,11 @@ public class Music {
     private String uri;
     private String iconUri;
     private String folder;
+    private String path;
     private int duration;
     private long addTime;
 
-    public Music(long id, String title, String artist, String album, String uri, String iconUri,String folder, int duration, long addTime) {
+    public Music(long id, String title, String artist, String album, String uri, String iconUri,String folder,String path, int duration, long addTime) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -31,6 +32,7 @@ public class Music {
         this.uri = uri;
         this.iconUri = iconUri;
         this.folder = folder;
+        this.path = path;
         this.duration = duration;
         this.addTime = addTime;
     }
@@ -87,6 +89,14 @@ public class Music {
         this.folder = folder;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public int getDuration() {
         return duration;
     }
@@ -116,12 +126,13 @@ public class Music {
                 Objects.equal(album, music.album) &&
                 Objects.equal(uri, music.uri) &&
                 Objects.equal(iconUri, music.iconUri) &&
-                Objects.equal(folder, music.folder);
+                Objects.equal(folder, music.folder) &&
+                Objects.equal(path, music.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, title, artist, album, uri, iconUri,folder, duration, addTime);
+        return Objects.hashCode(id, title, artist, album, uri, iconUri,folder,path, duration, addTime);
     }
 
     @NonNull
@@ -135,6 +146,7 @@ public class Music {
                 ", uri='" + uri + '\'' +
                 ", iconUri='" + iconUri + '\'' +
                 ", folder='" + folder + '\'' +
+                ", path='" + path + '\'' +
                 ", duration=" + duration +
                 ", addTime=" + addTime +
                 '}';
