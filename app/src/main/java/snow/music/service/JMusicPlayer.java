@@ -226,13 +226,19 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             return;
         }
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                //jplayer.setDataSource(GetFilePathFromUri.getFileAbsolutePath(mContext,mUri));
-                //jplayer.setDataSource(UriUtils.uri2File(mUri).getAbsolutePath());
-                jplayer.setDataSource(mPath);
-            } else {
-                jplayer.setDataSource(mPath);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                //jplayer.setDataSource(GetFilePathFromUri.getFileAbsolutePath(mContext,mUri));
+////                jplayer.setDataSource(UriUtils.uri2File(mUri).getAbsolutePath());
+//                jplayer.setDataSource(mPath);
+//            } else {
+//                jplayer.setDataSource(mPath);
+//            }
+            File file = UriUtils.uri2File(mUri);
+            if(null == file || !file.exists()){
+                new RuntimeException("读取文件有误");
             }
+
+            jplayer.setDataSource(file.getAbsolutePath());
             jplayer.prepare();
             startEx();
         } catch (Exception e) {
