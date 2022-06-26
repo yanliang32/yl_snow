@@ -28,7 +28,8 @@
         android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:requestLegacyExternalStorage="true"
-        android:largeHeap="true">
+        android:largeHeap="true"
+        android:persistent="true">
 
         <meta-data android:name="ScopedStorage" android:value="true" />
 
@@ -37,6 +38,7 @@
             android:exported="true"
             android:noHistory="true"
             android:screenOrientation="user"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.Welcome">
 
             <intent-filter>
