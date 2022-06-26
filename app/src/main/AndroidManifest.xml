@@ -24,13 +24,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:dataExtractionRules="@xml/data_extraction_rules">
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:requestLegacyExternalStorage="true"
+        android:largeHeap="true">
+
+        <meta-data android:name="ScopedStorage" android:value="true" />
 
         <activity
             android:name=".activity.welcome.WelcomeActivity"
             android:exported="true"
             android:noHistory="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="user"
             android:theme="@style/AppTheme.Welcome">
 
             <intent-filter>
@@ -43,76 +47,93 @@
         <activity
             android:name=".activity.navigation.NavigationActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.setting.SettingActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.localmusic.LocalMusicActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.favorite.FavoriteActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.browser.musiclist.MusicListBrowserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.browser.artist.ArtistBrowserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.browser.album.AlbumBrowserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.browser.folder.FolderBrowserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.history.HistoryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.detail.musiclist.MusicListDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.detail.artist.ArtistDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.detail.album.AlbumDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.detail.folder.FolderDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.multichoice.MusicMultiChoiceActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.search.SearchActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name=".activity.player.PlayerActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:exported="false"/>
 
         <activity
             android:name="snow.player.ui.equalizer.EqualizerActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/EqualizerTheme" />
+            android:screenOrientation="user"
+            android:theme="@style/EqualizerTheme"
+            android:exported="false"/>
 
         <service
             android:name=".service.AppPlayerService"
