@@ -37,7 +37,7 @@ public class AppPlayerService extends PlayerService {
     public void onCreate() {
         super.onCreate();
 
-        setMaxIDLETime(5);
+        setMaxIDLETime(-1);
         mMusicStore = MusicStore.getInstance();
     }
 

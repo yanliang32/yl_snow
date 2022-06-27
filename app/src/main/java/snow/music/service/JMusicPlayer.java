@@ -152,7 +152,7 @@ public class JMusicPlayer extends AbstractMusicPlayer {
             @Override
             public void onCompletion(JPlayer mp) {
                 if (mLooping) {
-                    mp.reset();
+                    //mp.reset();
                     mp.prepare();
                     mp.start();
                     notifyOnRepeat();
